@@ -1,5 +1,3 @@
-import 'core-js/fn/array/from';
-
 /**
  * Perform querySelectorAll using the experimental :has() selector, as
  * defined by MDN.

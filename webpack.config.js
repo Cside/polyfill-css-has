@@ -1,6 +1,6 @@
 const path = require('path');
 
-module.exports = {
+const common = {
   entry: './src/polyfill-css-has.ts',
   module: {
     rules: [
@@ -11,7 +11,10 @@ module.exports = {
       },
       {
         test: /\.tsx?$/,
-        use: 'ts-loader',
+        use: {
+          loader: 'ts-loader',
+          options: {},
+        },
         exclude: /node_modules/
       }
     ]
@@ -25,3 +28,32 @@ module.exports = {
     libraryTarget: 'umd'
   }
 };
+
+const commonJS = {
+  ...structuredClone(common),
+  output: {
+    filename: 'index.cjs',
+    path: `${__dirname}/dist/cjs`,
+    library: {
+      type: 'commonjs',
+    },
+  },
+};
+commonJS.module.rules[1].use.options.configFile = 'tsconfig.cjs.json';
+
+const esModule = {
+  ...structuredClone(common),
+  experiments: {
+    outputModule: true,
+  },
+  output: {
+    filename: 'index.mjs',
+    path: `${__dirname}/dist/esm`,
+    library: {
+      type: 'module',
+    },
+  },
+};
+esModule.module.rules[1].use.options.configFile = 'tsconfig.esm.json';
+
+module.exports = [commonJS, esModule];
