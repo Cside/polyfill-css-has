@@ -1,45 +1,48 @@
-const path = require('path');
+const path = require("path");
 
 const common = {
-  entry: './src/polyfill-css-has.ts',
+  entry: "./src/polyfill-css-has.ts",
   module: {
     rules: [
       {
         test: /\.js?$/,
-        use: 'babel-loader',
-        exclude: /node_modules/
+        use: "babel-loader",
+        exclude: /node_modules/,
       },
       {
         test: /\.tsx?$/,
         use: {
-          loader: 'ts-loader',
+          loader: "ts-loader",
           options: {},
         },
-        exclude: /node_modules/
-      }
-    ]
+        exclude: /node_modules/,
+      },
+    ],
   },
   resolve: {
-    extensions: ['.tsx', '.ts', '.js']
+    extensions: [".tsx", ".ts", ".js"],
   },
   output: {
-    filename: 'polyfill-css-has.js',
-    path: path.resolve(__dirname, 'dist'),
-    libraryTarget: 'umd'
-  }
+    filename: "polyfill-css-has.js",
+    path: path.resolve(__dirname, "dist"),
+    libraryTarget: "umd",
+  },
+  optimization: {
+    minimize: false,
+  },
 };
 
 const commonJS = {
   ...structuredClone(common),
   output: {
-    filename: 'index.cjs',
+    filename: "index.cjs",
     path: `${__dirname}/dist/cjs`,
     library: {
-      type: 'commonjs',
+      type: "commonjs",
     },
   },
 };
-commonJS.module.rules[1].use.options.configFile = 'tsconfig.cjs.json';
+commonJS.module.rules[1].use.options.configFile = "tsconfig.cjs.json";
 
 const esModule = {
   ...structuredClone(common),
@@ -47,13 +50,13 @@ const esModule = {
     outputModule: true,
   },
   output: {
-    filename: 'index.mjs',
+    filename: "index.mjs",
     path: `${__dirname}/dist/esm`,
     library: {
-      type: 'module',
+      type: "module",
     },
   },
 };
-esModule.module.rules[1].use.options.configFile = 'tsconfig.esm.json';
+esModule.module.rules[1].use.options.configFile = "tsconfig.esm.json";
 
 module.exports = [commonJS, esModule];

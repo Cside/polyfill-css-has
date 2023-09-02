@@ -1,1 +1,116 @@
-var e={d:(r,t)=>{for(var n in t)e.o(t,n)&&!e.o(r,n)&&Object.defineProperty(r,n,{enumerable:!0,get:t[n]})},o:(e,r)=>Object.prototype.hasOwnProperty.call(e,r)},r={};function t(e,r){const t=r||document,u=n(e);return u?c(o(t,e),u):Array.from(t.querySelectorAll(e))}function n(e){const r=/:has\((.*)\)/.exec(e);return!!r&&r[1]}function o(e,r){const t=function(e){return e.slice(0,e.indexOf(":has("))}(r);return e.querySelectorAll(t)}function c(e,r){let t;return t=function(e){return">"===e.trim().slice(0,1)}(r)?l:u,Array.from(e).filter((e=>t(e,r)))}function u(e,r){return!!e.querySelector(r)}function l(e,r){return Array.from(e.children).some((e=>e.matches(function(e){return e.trim().slice(1).trim()}(r))))}e.d(r,{Cc:()=>o,Iw:()=>c,ZP:()=>t,lD:()=>n});var i=r.ZP,a=r.Iw,s=r.lD,f=r.Cc;export{i as default,a as filterNodesInScopeByHasSelector,s as getHasInnerSelector,f as getNodesInCurrentScope};
+/******/ // The require scope
+/******/ var __webpack_require__ = {};
+/******/ 
+/************************************************************************/
+/******/ /* webpack/runtime/define property getters */
+/******/ (() => {
+/******/ 	// define getter functions for harmony exports
+/******/ 	__webpack_require__.d = (exports, definition) => {
+/******/ 		for(var key in definition) {
+/******/ 			if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
+/******/ 				Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
+/******/ 			}
+/******/ 		}
+/******/ 	};
+/******/ })();
+/******/ 
+/******/ /* webpack/runtime/hasOwnProperty shorthand */
+/******/ (() => {
+/******/ 	__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
+/******/ })();
+/******/ 
+/************************************************************************/
+var __webpack_exports__ = {};
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   Cc: () => (/* binding */ getNodesInCurrentScope),
+/* harmony export */   Iw: () => (/* binding */ filterNodesInScopeByHasSelector),
+/* harmony export */   ZP: () => (/* binding */ querySelectorAllWithHas),
+/* harmony export */   lD: () => (/* binding */ getHasInnerSelector)
+/* harmony export */ });
+/**
+ * Perform querySelectorAll using the experimental :has() selector, as
+ * defined by MDN.
+ *
+ * @example
+ * const results = querySelectorAll('.container > div:has(> img)');
+ *
+ * @see https://developer.mozilla.org/en-US/docs/Web/CSS/:has
+ * @param selector CSS selector containing :has()
+ * @param dom      Optional element to search. Defaults to document.
+ */
+function querySelectorAllWithHas(selector, dom) {
+    const node = dom || document;
+    const hasSelector = getHasInnerSelector(selector);
+    if (!hasSelector) {
+        return Array.from(node.querySelectorAll(selector));
+    }
+    const nodes = getNodesInCurrentScope(node, selector);
+    return filterNodesInScopeByHasSelector(nodes, hasSelector);
+}
+/**
+ * Get the inner-selector from the :has() statement.
+ * Returns false if no :has() is present.
+ *
+ * @param selector A CSS selector possibly containing :has()
+ */
+function getHasInnerSelector(selector) {
+    const matches = /:has\((.*)\)/.exec(selector);
+    if (!matches) {
+        return false;
+    }
+    return matches[1];
+}
+/**
+ * Get the elements in the resolved scope prior to the :has() statement.
+ *
+ * @param dom       Element
+ * @param selector  Selector
+ */
+function getNodesInCurrentScope(dom, selector) {
+    const currentScopeSelector = getCurrentScopeSelector(selector);
+    return dom.querySelectorAll(currentScopeSelector);
+}
+/**
+ * Grab the top-level scope, immediately to the left of :has()
+ *
+ * @param selector
+ */
+function getCurrentScopeSelector(selector) {
+    return selector.slice(0, selector.indexOf(':has('));
+}
+/**
+ * Perform the querySelectorAll behavior against the nodes at the top level.
+ *
+ * @param nodes     Filtered nodes from the prior scope.
+ * @param selector  The inner :has() selector
+ */
+function filterNodesInScopeByHasSelector(nodes, selector) {
+    let method;
+    method = selectorHasDirectDescendant(selector)
+        ? filterNodeWithDirectDescendants
+        : filterNode;
+    return Array.from(nodes).filter(node => method(node, selector));
+}
+function selectorHasDirectDescendant(selector) {
+    return selector.trim().slice(0, 1) === '>';
+}
+function scrubDirectDescendantFromSelector(selector) {
+    return selector
+        .trim()
+        .slice(1)
+        .trim();
+}
+function filterNode(node, selector) {
+    return !!node.querySelector(selector);
+}
+function filterNodeWithDirectDescendants(node, selector) {
+    return Array.from(node.children).some(child => {
+        return child.matches(scrubDirectDescendantFromSelector(selector));
+    });
+}
+
+var __webpack_exports__default = __webpack_exports__.ZP;
+var __webpack_exports__filterNodesInScopeByHasSelector = __webpack_exports__.Iw;
+var __webpack_exports__getHasInnerSelector = __webpack_exports__.lD;
+var __webpack_exports__getNodesInCurrentScope = __webpack_exports__.Cc;
+export { __webpack_exports__default as default, __webpack_exports__filterNodesInScopeByHasSelector as filterNodesInScopeByHasSelector, __webpack_exports__getHasInnerSelector as getHasInnerSelector, __webpack_exports__getNodesInCurrentScope as getNodesInCurrentScope };
