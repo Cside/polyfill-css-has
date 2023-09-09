@@ -1,6 +1,6 @@
 {
   "name": "polyfill-css-has",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "main": "./dist/cjs/index.cjs",
   "module": "./dist/esm/index.mjs",
   "types": "./dist/polyfill-css-has.d.ts",
@@ -9,6 +9,11 @@
     "dev": "webpack --mode development",
     "build": "NODE_OPTIONS='--openssl-legacy-provider' webpack --mode production",
     "test": "jest"
+  },
+  "exports": {
+    "require": "./dist/cjs/index.cjs",
+    "import": "./dist/esm/index.mjs",
+    "default": "./dist/cjs/index.cjs"
   },
   "devDependencies": {
     "@types/jest": "^29.5.4",
